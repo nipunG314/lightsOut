@@ -5,9 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Chasing Lights</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="bulma.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="index.css" />
 </head>
 <body>
+    <h6 class="title is-1">Chasing Lights</h6>
+    <form>
+        <button type="button">New Game</button>
+        <input type="number" min="2">
+    </form>
+    <h2 id="Time"></h2>
+    <h2 id="Moves"></h2>
+
     <canvas class="board">
     </canvas>
     <script src="index.js"></script>

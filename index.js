@@ -1,9 +1,35 @@
+class Game {
+    constructor(width, height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    run(cellCount){
+        this.board = new Board(cellCount, this.width, this.height);
+        this.canvas = document.querySelector(".board");
+        this.context = this.canvas.getContext("2d");
+
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+
+        this.board.draw(this.context);
+
+        this.canvas.addEventListener('click', (event) => {
+            let {success, i, j} = this.board.getIndex(this.canvas, event);
+            if(success) {
+                this.board.updateAt(i, j);
+                this.board.draw(this.context);
+            }
+        })
+    }
+}
+
 class Board {
     constructor(cellCount, width, height){
         this.cellCount = cellCount;
         this.width = width
         this.height = height
-        let totalBoardLength = cellCount * 2 - 1;
+        let totalBoardLength = (cellCount * 3 - 1)/2; // Total number of cells needed in both directions. It treats each gap as a half cell.
         this.cellWidth = width / totalBoardLength;
         this.cellHeight = height / totalBoardLength;
 
@@ -41,6 +67,7 @@ class Board {
     }
 
     draw(context){
+        // The increment is done by 1.5 so that it leaves space for the negative space between the lights.
         for(let i=0; i< this.cellCount*1.5; i += 1.5){
             for(let j=0; j<this.cellCount*1.5; j += 1.5){
                 if(this.board[i/1.5][j/1.5] == 0){
@@ -53,12 +80,27 @@ class Board {
             }
         }
     }
+
+    getIndex(canvas, event){
+        let rect = canvas.getBoundingClientRect();
+        let x = event.clientX - rect.left;
+        let y = event.clientY - rect.top;
+        let shiftWidth = (3*this.cellWidth)/2;
+        let shiftHeight = (3*this.cellHeight)/2;
+
+        let j = parseInt(x/shiftWidth);
+        let i = parseInt(y/shiftHeight);
+
+        if(parseInt(x/shiftWidth + 1/3) > j){
+            return {success: false, i: 0, j: 0}
+        }
+        if(parseInt(y/shiftWidth + 1/3) > i){
+            return {success: false, i: 0, j: 0}
+        }
+        return {success: true, i: i, j: j}
+    }
 } 
 
-let canvas = document.querySelector(".board");
-let context = canvas.getContext("2d");
-let board = new Board(5, 400, 400);
-canvas.width = 400;
-canvas.height = 400;
+let game = new Game(400, 400);
 
-board.draw(context);
+game.run(3);
