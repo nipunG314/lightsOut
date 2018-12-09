@@ -11,14 +11,17 @@
 <body>
     <h6 class="title is-1">Chasing Lights</h6>
     <form>
-        <button type="button">New Game</button>
-        <input type="number" min="2">
+        <button type="button" name="newGame">New Game</button>
+        <input type="number" name="cellCount" min="2">
     </form>
-    <h2 id="Time"></h2>
-    <h2 id="Moves"></h2>
+    <h2 id="Time">Time: </h2>
+    <h2 id="Moves">Moves: </h2>
 
     <canvas class="board">
     </canvas>
+
+    <h2 id="Win"></h2>
+
     <script src="index.js"></script>
 </body>
 </html>

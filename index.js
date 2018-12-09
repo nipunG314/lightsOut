@@ -2,25 +2,63 @@ class Game {
     constructor(width, height) {
         this.width = width;
         this.height = height;
+        this.secCount = 0;
+        this.minCount = 0;
+        this.moveCount = 0;
+        this.victory = false;
+
+        let newGame = document.querySelector("button[name = 'newGame']");
+        let cellCount = document.querySelector("input[name = 'cellCount']")
+        newGame.addEventListener('click', (event) => {
+            this.run(parseInt(cellCount.value))
+        })
+
+        /**
+         *  DO NOT TOUCH THIS FUNCTION IF YOU DON'T KNOW WHAT YOU ARE DOING!
+         * 
+         *  The Game class creates a new board every time you click New Game. This allows
+         *  us to reset the size of the game board without instancing a new Game object. However, it 
+         *  creates a problem when you have to handle mouse input. If the event listener is added each time
+         *  the board is set, there will be a multiple of event listeners attached to the Canvas DOM Node. 
+         *  So if you press New Game for the second time, and there are two listeners attached they will
+         *  undo each other's work.
+         * 
+         *  The hack-y solution I have used here is to attach the event listener in the constructor of the
+         *  Game object. Hence, there is only ever one event listener. However, the attached handler function 
+         *  does not yet make sense because it has no notion of a this.board yet. That will happen only 
+         *  when this.run() is called. To ensure that this code doesn't break, DO NOT CREATE A SITUATION WHERE 
+         *  NEW GAME BUTTON CAN BE CLICKED OUTSIDE OF THE CONTEXT OF A RUN() CALL.   
+         * 
+         */
+        let canvas = document.querySelector(".board")
+        canvas.addEventListener('click', (event) => {
+            let {success, i, j} = this.board.getIndex(this.canvas, event);
+            if(success && !this.victory) {
+                this.board.updateAt(i, j);
+                this.board.draw(this.context);
+                if(this.board.win()) {
+                    this.victory = true;
+                    let winNode = document.querySelector("#win");
+                    winNode.innerHTML = "You have won!";
+                }
+            }
+        })
     }
 
     run(cellCount){
+        // Cell Count is passed as an argument to run rather than the constructor so that the same game object can run multiple games.
         this.board = new Board(cellCount, this.width, this.height);
         this.canvas = document.querySelector(".board");
         this.context = this.canvas.getContext("2d");
+        this.victory = false;
+
+        let winNode = document.querySelector("#win");
+        winNode.innerHTML = "";
 
         this.canvas.width = this.width;
         this.canvas.height = this.height;
 
         this.board.draw(this.context);
-
-        this.canvas.addEventListener('click', (event) => {
-            let {success, i, j} = this.board.getIndex(this.canvas, event);
-            if(success) {
-                this.board.updateAt(i, j);
-                this.board.draw(this.context);
-            }
-        })
     }
 }
 
@@ -41,10 +79,17 @@ class Board {
             this.board[i] = new Array(cellCount);
             this.board[i].fill(0);
         }
+        this.winCount = 0
     }
 
     update(i, j) {
         this.board[i][j] = 1 - this.board[i][j];
+        if(this.board[i][j] == 1){
+            this.winCount += 1
+        }
+        else {
+            this.winCount -= 1
+        }
     }
 
     updateAt(i, j){
@@ -99,8 +144,10 @@ class Board {
         }
         return {success: true, i: i, j: j}
     }
+
+    win(){
+        return this.winCount == this.cellCount * this.cellCount
+    }
 } 
 
 let game = new Game(400, 400);
-
-game.run(3);
