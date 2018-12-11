@@ -1,0 +1,20 @@
+body {
+    background-color: #14DBFF;
+    background-image: linear-gradient(#6dd5ed, #2193b0)
+}
+
+.title, .subtitle, .newGameForm {
+    text-align: center
+}
+
+.newGameForm .button {
+    margin: 1%
+}
+
+#Time {
+    text-align: right
+}
+
+#Moves {
+    text-align: left
+}

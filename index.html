@@ -3,25 +3,46 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Chasing Lights</title>
+    <title>Lights Out</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="bulma.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="bulma-slider.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="notifications.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="index.css" />
 </head>
 <body>
-    <h6 class="title is-1">Chasing Lights</h6>
-    <form>
-        <button type="button" name="newGame">New Game</button>
-        <input type="range" name="cellCount" min="2" max="20" value="3">
-    </form>
-    <h2 id="Time">Time: </h2>
-    <h2 id="Moves">Moves: </h2>
+    <p class="title is-1">Lights Out</p>
+    <p class="subtitle is-3">A simple game written in Javascript</p>
+
+    <div class="newGameForm">
+        <form>
+            <button type="button" name="newGame" class="button is-link is-medium is-rounded">New Game</button>
+            <br>
+            <input type="range" name="cellCount" min="2" max="20" value="3" class="slider is-circle is-large">
+        </form>
+    </div>
+    <div class="columns">
+        <div class="column">
+            <h2 class="title is-2" id="Time">Time: 0:00 </h2>
+        </div>
+        <div class="column">
+            <h2 class="title is-2" id="Moves">Moves: 0</h2>
+        </div>
+    </div>
 
     <canvas class="board">
     </canvas>
 
-    <h2 id="Win"></h2>
+    <h2 class="" id="Win"></h2>
 
     <script src="index.js"></script>
+    <script src="bulma-slider.min.js"></script>
+    <script src="notifications.js"></script>
+    <script>
+        const victoryNotfication = window.createNotification({
+            theme: 'success',
+            showDuration: 5000
+        })
+    </script>
 </body>
 </html>

@@ -57,8 +57,9 @@ class Game {
                 // Win Condition
                 if(this.board.win()) {
                     this.victory = true;
-                    let winNode = document.querySelector("#win");
-                    winNode.innerHTML = "You have won!";
+                    victoryNotfication({message: 'You have won!'});
+                //    let winNode = document.querySelector("#win");
+                //    winNode.innerHTML = "You have won!";
                 }
             }
         })
@@ -81,6 +82,7 @@ class Game {
         
         // Initialize HUD
         this.startTime = new Date();
+        this.moveCount = 0
         let timeNode = document.querySelector("#Time")
         let moveNode = document.querySelector("#Moves")
         timeNode.innerHTML = formatTime(0)
@@ -105,8 +107,8 @@ class Board {
         this.cellWidth = width / totalBoardLength;
         this.cellHeight = height / totalBoardLength;
 
-        this.emptyColor = "#000000";
-        this.fillColor = "#FF0000";
+        this.emptyColor = "rgb(109, 223, 237, 1.0)";
+        this.fillColor = "rgb(0, 78, 146, 1.0)";
 
         this.board = new Array(cellCount)
         for(let i=0;i<cellCount;i++){
@@ -147,13 +149,16 @@ class Board {
 
     draw(context){
         // The increment is done by 1.5 so that it leaves space for the negative space between the lights.
+
         for(let i=0; i< this.cellCount*1.5; i += 1.5){
             for(let j=0; j<this.cellCount*1.5; j += 1.5){
+                context.fillStyle = "#FFFFFF";
+                context.fillRect(j*this.cellWidth, i*this.cellHeight, this.cellWidth, this.cellHeight);
                 if(this.board[i/1.5][j/1.5] == 0){
-                    context.fillStyle = "#000000";
+                    context.fillStyle = this.emptyColor;
                 }
                 else {
-                    context.fillStyle = "#FF0000";
+                    context.fillStyle = this.fillColor;
                 }
                 context.fillRect(j*this.cellWidth, i*this.cellHeight, this.cellWidth, this.cellHeight);
             }
@@ -184,13 +189,12 @@ class Board {
     }
 } 
 
-// Helper Functions
+// Helpers
 function formatTime(secCount){
     let secs = secCount % 60
     let mins = parseInt(secCount / 60)
     if(secs < 10) { secs = "0" + secs}
     return "Time: " + mins + ":" + secs
 }
-
 
 let game = new Game(400, 400);
