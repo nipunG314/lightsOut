@@ -2,15 +2,26 @@ class Game {
     constructor(width, height) {
         this.width = width;
         this.height = height;
-        this.secCount = 0;
-        this.minCount = 0;
+        this.startTime;
         this.moveCount = 0;
         this.victory = false;
 
         let newGame = document.querySelector("button[name = 'newGame']");
         let cellCount = document.querySelector("input[name = 'cellCount']")
+
         newGame.addEventListener('click', (event) => {
             this.run(parseInt(cellCount.value))
+        })
+
+        cellCount.addEventListener('input', (event) => {
+            setTimeout(cellCount => { 
+                if(cellCount.value < 2) {
+                    cellCount.value = 2;
+                }
+                if(cellCount.value != parseInt(cellCount.value)){
+                    cellCount.value = parseInt(cellCount.value);
+                }
+            },1000);
         })
 
         /**
@@ -34,8 +45,16 @@ class Game {
         canvas.addEventListener('click', (event) => {
             let {success, i, j} = this.board.getIndex(this.canvas, event);
             if(success && !this.victory) {
+                // Update Board
                 this.board.updateAt(i, j);
                 this.board.draw(this.context);
+                
+                // Update HUD
+                this.moveCount++
+                let moveNode = document.querySelector("#Moves")
+                moveNode.innerHTML = "Moves: " + this.moveCount
+
+                // Win Condition
                 if(this.board.win()) {
                     this.victory = true;
                     let winNode = document.querySelector("#win");
@@ -59,6 +78,21 @@ class Game {
         this.canvas.height = this.height;
 
         this.board.draw(this.context);
+        
+        // Initialize HUD
+        this.startTime = new Date();
+        let timeNode = document.querySelector("#Time")
+        let moveNode = document.querySelector("#Moves")
+        timeNode.innerHTML = formatTime(0)
+        moveNode.innerHTML = "Moves: 0"
+        setInterval(() => {
+            if(!this.victory) {
+                this.secCount++
+                let date = new Date()
+                let timeDiff = parseInt((date - this.startTime)/1000)
+                timeNode.innerHTML = formatTime(timeDiff)
+            }
+        }, 1000)
     }
 }
 
@@ -149,5 +183,14 @@ class Board {
         return this.winCount == this.cellCount * this.cellCount
     }
 } 
+
+// Helper Functions
+function formatTime(secCount){
+    let secs = secCount % 60
+    let mins = parseInt(secCount / 60)
+    if(secs < 10) { secs = "0" + secs}
+    return "Time: " + mins + ":" + secs
+}
+
 
 let game = new Game(400, 400);
