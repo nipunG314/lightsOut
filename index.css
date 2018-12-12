@@ -18,3 +18,9 @@ body {
 #Moves {
     text-align: left
 }
+
+.board {
+    margin: auto;
+    padding: 0;
+    display: block    
+}

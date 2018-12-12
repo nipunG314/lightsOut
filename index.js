@@ -72,11 +72,8 @@ class Game {
         this.context = this.canvas.getContext("2d");
         this.victory = false;
 
-        let winNode = document.querySelector("#win");
-        winNode.innerHTML = "";
-
         this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        this.canvas.height = this.height*1.2;
 
         this.board.draw(this.context);
         
@@ -197,4 +194,4 @@ function formatTime(secCount){
     return "Time: " + mins + ":" + secs
 }
 
-let game = new Game(400, 400);
+let game = new Game(500, 500);
